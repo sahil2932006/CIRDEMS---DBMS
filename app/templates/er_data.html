@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CIRDEMS · ER Data Entry</title>
+  <style>
+    :root{color-scheme:light;--bg:#f3f5f7;--panel:#fff;--line:#d9e0e7;--text:#253142;--muted:#657486;--blue:#315f8c;--green:#347653;--red:#a24141}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text)}
+    header{padding:17px max(24px,calc((100% - 1180px)/2));background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:20px}
+    h1{font-size:clamp(23px,3vw,30px);margin:0;color:#20364d}header p{color:var(--muted);margin:4px 0 0}.nav{color:var(--blue);text-decoration:none;border:1px solid #cbd7e2;padding:8px 12px;border-radius:5px;white-space:nowrap}
+    main{max-width:1180px;margin:auto;padding:22px}.note{background:#fff;border:1px solid var(--line);padding:12px 15px;border-radius:6px;color:var(--muted);margin-bottom:17px}.note strong{color:var(--text)}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:14px}.card{background:var(--panel);border:1px solid var(--line);border-radius:7px;padding:18px;box-shadow:0 1px 3px #172b3d0b}.card h2{font-size:18px;margin:0 0 3px;color:#20364d}.card p{color:var(--muted);font-size:13px;margin:0 0 13px}
+    label{display:block;color:#465668;font-size:12px;font-weight:650;margin:10px 0 5px}input,select,textarea{width:100%;background:#fff;border:1px solid #cbd5df;border-radius:5px;padding:9px;color:var(--text);font:inherit}textarea{min-height:75px;resize:vertical}input:focus,select:focus,textarea:focus{outline:2px solid #d7e4f0;border-color:var(--blue)}
+    button{margin-top:14px;width:100%;padding:10px;border:0;border-radius:5px;background:var(--blue);color:white;font-weight:650;cursor:pointer}button:hover{background:#254b70}.result{min-height:22px;margin-top:9px;font-size:13px;color:var(--green);overflow-wrap:anywhere}.result.error{color:var(--red)}.small{font-size:11px;color:var(--muted);margin-top:4px}
+    @media(max-width:620px){header{align-items:flex-start;flex-direction:column}main{padding:16px}}
+  </style>
+</head>
+<body>
+<header><div><h1>ER Diagram · Data Entry</h1><p>Each form writes directly to Oracle through the Flask backend.</p></div><a class="nav" href="/">← SOC Dashboard</a></header>
+<main>
+  <div class="note"><strong>Diagram entities:</strong> User, Asset, Incident, Response_Action, Report, Investigation, Evidence, Chain_of_Custody, and Vulnerability. Foreign key choices are loaded from the live database. Evidence has its own generated ID, and each custody log points directly to that evidence record.</div>
+  <section class="grid" id="forms"></section>
+</main>
+<script>
+const definitions = [
+ {key:'user',title:'User',desc:'People who report incidents or handle response work.',fields:[
+  ['username','Username','text',true],['first_name','First name','text',true],['last_name','Last name','text',true],['email','Email','email',true],
+  ['role','Role','select:STANDARD_USER|SOC_ANALYST|INCIDENT_RESPONDER|FORENSIC_EXAMINER|SYSTEM_ADMIN|SECURITY_MANAGER',true],['status','Status','select:ACTIVE|SUSPENDED|DEACTIVATED',true]]},
+ {key:'asset',title:'Asset',desc:'The system, device, or network asset affected by incidents.',fields:[
+  ['asset_name','Asset name','text',true],['asset_type','Asset type','select:Workstation|Database Server|Web Server|Firewall|Core Router|Domain Controller',true],['ip_address','IP address','text',true],['mac_address','MAC address','text',true],['operating_system','Operating system','text',true],['location','Location','text',true],['criticality','Criticality','select:LOW|MEDIUM|HIGH|CRITICAL',true],['owner_user_id','Owner','users',false],['status','Status','select:ACTIVE|UNDER_INVESTIGATION|COMPROMISED|ISOLATED|DECOMMISSIONED',true]]},
+ {key:'incident',title:'Incident',desc:'A reported event tied to one user and one asset.',fields:[
+  ['title','Title','text',true],['description','Description','textarea',true],['asset_id','Asset','assets',true],['reporter_user_id','Reported by','users',true],['incident_type','Incident type','text',true],['severity','Severity','select:LOW|MEDIUM|HIGH|CRITICAL',true],['impact_level','Impact','select:MINOR|MODERATE|MAJOR|CATASTROPHIC',true],['source','Source','text',false]]},
+ {key:'response_action',title:'Response Action',desc:'Response work assigned for an incident.',fields:[
+  ['incident_id','Incident','incidents',true],['assigned_to','Assigned to','users',true],['action_type','Action type','text',true],['description','Description','textarea',true],['action_date','Action date','datetime-local',true],['status','Status','select:PENDING|IN_EXECUTION|COMPLETED|ABORTED',true]]},
+ {key:'report',title:'Report',desc:'A generated report associated with an incident.',fields:[
+  ['incident_id','Incident','incidents',true],['report_type','Report type','text',true],['summary','Summary','textarea',true],['generated_by','Generated by','users',false]]},
+ {key:'investigation',title:'Investigation',desc:'Investigation work for an incident; one incident can have many.',fields:[
+  ['incident_id','Incident','incidents',true],['investigated_by','Investigated by','users',false],['start_date','Start date','datetime-local',true],['end_date','End date','datetime-local',false],['status','Status','select:OPEN|IN_PROGRESS|PENDING_EVIDENCE|COMPLETED',true],['findings','Findings','textarea',false],['conclusion','Conclusion','textarea',false],['methodology','Methodology','text',true]]},
+ {key:'evidence',title:'Evidence',desc:'Evidence belongs to an incident and receives its own generated ID.',fields:[
+  ['incident_id','Incident','incidents',true],['collected_by','Collected by','users',false],['evidence_type','Evidence type','text',true],['file_name','File name','text',true],['integrity_hash','Integrity hash (SHA-256)','text',true],['source','Source','text',true],['file_path','File path / storage location','text',true],['notes','Notes','textarea',false]]},
+ {key:'custody',title:'Chain of Custody',desc:'A custody log for an evidence item.',fields:[
+  ['evidence_id','Evidence item','evidence',true],['handled_by','Handled by','users',true],['action','Action','text',true],['action_time','Action time','datetime-local',true],['location','Location','text',false],['remarks','Remarks','textarea',false]]},
+ {key:'vulnerability',title:'Vulnerability',desc:'A vulnerability associated with an incident and its asset.',fields:[
+  ['incident_id','Incident','incidents',true],['cve_code','CVE code','text',true],['title','Title','text',true],['description','Description','textarea',true],['severity','Severity','select:LOW|MEDIUM|HIGH|CRITICAL',true],['status','Status','select:OPEN|IN_PROGRESS|PATCHED|RISK_ACCEPTED',true],['detected_date','Detected date','datetime-local',true]]}
+];
+let lookups={};
+const nowLocal=()=>{const d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,16)};
+function fieldHtml([name,label,type,required]){
+ let control='';
+ if(type.startsWith('select:')) control=`<select name="${name}" ${required?'required':''}>${type.slice(7).split('|').map(v=>`<option value="${v}">${v.replaceAll('_',' ')}</option>`).join('')}</select>`;
+ else if(['users','assets','incidents','investigations','evidence'].includes(type)){
+  const opts=(lookups[type]||[]).map(row=>`<option value="${row[0]}">${row[0]} · ${row[1]}</option>`).join('');
+  control=`<select name="${name}" ${required?'required':''}>${required?'':'<option value="">— none —</option>'}${opts}</select>`;
+ } else if(type==='textarea') control=`<textarea name="${name}" ${required?'required':''}></textarea>`;
+ else control=`<input name="${name}" type="${type}" ${required?'required':''} ${type==='datetime-local'?'':''}>`;
+ return `<label>${label}</label>${control}`;
+}
+function render(){document.querySelector('#forms').innerHTML=definitions.map(d=>`<article class="card"><h2>${d.title}</h2><p>${d.desc}</p><form data-entity="${d.key}">${d.fields.map(fieldHtml).join('')}<div class="result" aria-live="polite"></div><button type="submit">Save ${d.title} to Oracle</button></form></article>`).join('');
+ document.querySelectorAll('input[type="datetime-local"]').forEach(x=>x.value=nowLocal());
+ document.querySelectorAll('form').forEach(form=>form.addEventListener('submit',submitForm));
+}
+async function submitForm(event){event.preventDefault();const form=event.currentTarget;const result=form.querySelector('.result');const data=Object.fromEntries(new FormData(form));
+ result.className='result';result.textContent='Saving…';
+ try{const response=await fetch(`/api/er/${form.dataset.entity}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});const body=await response.json();if(!response.ok||!body.success)throw new Error(body.error||'Could not save');result.textContent=body.message;form.reset();form.querySelectorAll('input[type="datetime-local"]').forEach(x=>x.value=nowLocal());await loadLookups();}
+ catch(error){result.classList.add('error');result.textContent=`Not saved: ${error.message}`;}
+}
+async function loadLookups(){const response=await fetch('/api/er-data');const body=await response.json();if(!response.ok)throw new Error(body.error||'Oracle lookup failed');lookups={users:body.users.map(x=>[x[0],x[1]]),assets:body.assets.map(x=>[x[0],x[1]]),incidents:body.incidents.map(x=>[x[0],x[1]]),investigations:body.investigations.map(x=>[x[0],x[1]]),evidence:body.evidence};}
+loadLookups().then(render).catch(error=>{document.querySelector('#forms').innerHTML=`<div class="note">Could not load dropdown data from Oracle: ${error.message}. Check that Oracle is running, then refresh.</div>`;});
+</script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CIRDEMS | ER Diagram</title>
+  <style>
+    :root{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#253142;background:#f3f5f7;font-synthesis:none}
+    *{box-sizing:border-box}body{margin:0}header{background:#fff;border-bottom:1px solid #d9e0e7;padding:19px max(22px,calc((100% - 1160px)/2));display:flex;align-items:center;justify-content:space-between;gap:20px}
+    h1{font-size:1.55rem;margin:0;color:#20364d}header p{margin:4px 0 0;color:#627083;font-size:.92rem}.links{display:flex;gap:9px;flex-wrap:wrap}.links a{color:#315f8c;text-decoration:none;border:1px solid #cbd7e2;padding:8px 12px;border-radius:5px;font-size:.9rem}.links a:hover{background:#f1f5f8}
+    main{max-width:1160px;margin:0 auto;padding:24px 22px 48px}.section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:0 0 14px}.section-head h2{font-size:1.15rem;margin:0;color:#20364d}.section-head p{margin:0;color:#687789;font-size:.88rem}
+    .legend{background:#fff;border:1px solid #d9e0e7;border-radius:7px;padding:12px 15px;margin-bottom:18px;color:#596779;font-size:.88rem}.pk{font-weight:700;text-decoration:underline;text-underline-offset:3px;color:#243c55}
+    .entities{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.entity{background:#fff;border:1px solid #d9e0e7;border-radius:7px;overflow:hidden}.entity h3{margin:0;padding:10px 13px;background:#edf2f6;border-bottom:1px solid #d9e0e7;font-size:1rem;color:#20364d}.entity ul{list-style:none;margin:0;padding:10px 13px 12px}.entity li{padding:4px 0;border-bottom:1px solid #f0f2f4;font-size:.89rem}.entity li:last-child{border-bottom:0}.entity .pk{font-weight:700}
+    .relations{width:100%;border-collapse:collapse;background:white;border:1px solid #d9e0e7;border-radius:7px;overflow:hidden;font-size:.92rem}.relations th,.relations td{padding:11px 13px;text-align:left;border-bottom:1px solid #e7ebef}.relations th{background:#edf2f6;color:#4d5e70;font-weight:650}.relations tr:last-child td{border-bottom:0}.cardinality{font-weight:700;color:#315f8c;white-space:nowrap}
+    .note{margin-top:17px;padding:13px 15px;background:#fff;border-left:3px solid #7895b0;color:#596779;font-size:.87rem}.small{font-size:.82rem;color:#6c7a89;margin-top:12px}
+    @media(max-width:820px){.entities{grid-template-columns:repeat(2,minmax(0,1fr))}header{align-items:flex-start;flex-direction:column}}
+    @media(max-width:560px){main{padding:18px 13px}.entities{grid-template-columns:1fr}.relations{font-size:.83rem}.relations th,.relations td{padding:9px 8px}}
+  </style>
+</head>
+<body>
+<header>
+  <div><h1>CIRDEMS ER Diagram</h1><p>Entities and relationships from the project diagram</p></div>
+  <nav class="links" aria-label="Project pages"><a href="/">Dashboard</a><a href="/er-data">Add records</a></nav>
+</header>
+<main>
+  <section aria-labelledby="entities-title">
+    <div class="section-head"><h2 id="entities-title">Entities and attributes</h2><p>Underlined attributes are primary keys.</p></div>
+    <div class="legend"><span class="pk">Underlined</span> = primary key · FK = foreign key · The incident-to-investigation relationship allows multiple investigations per incident.</div>
+    <div class="entities">
+      <article class="entity"><h3>User</h3><ul><li class="pk">User_ID</li><li>Username</li><li>Email</li><li>Role</li><li>Status</li></ul></article>
+      <article class="entity"><h3>Incident</h3><ul><li class="pk">Incident_ID</li><li>Title</li><li>Description</li><li>Date_Reported</li><li>Severity</li><li>Status</li><li>Asset_ID (FK)</li><li>Reported_By (FK)</li></ul></article>
+      <article class="entity"><h3>Asset</h3><ul><li class="pk">Asset_ID</li><li>Asset_Name</li><li>Asset_Type</li><li>Location</li><li>Status</li></ul></article>
+      <article class="entity"><h3>Response_Action</h3><ul><li class="pk">Action_ID</li><li>Action_Type</li><li>Description</li><li>Assigned_To (FK)</li><li>Action_Date</li><li>Status</li><li>Incident_ID (FK)</li></ul></article>
+      <article class="entity"><h3>Report</h3><ul><li class="pk">Report_ID</li><li>Report_Type</li><li>Date_Generated</li><li>Summary</li><li>Generated_By (FK)</li><li>Incident_ID (FK)</li></ul></article>
+      <article class="entity"><h3>Investigation</h3><ul><li class="pk">Investigation_ID</li><li>Start_Date</li><li>End_Date</li><li>Status</li><li>Findings</li><li>Conclusion</li><li>Investigated_By (FK)</li><li>Incident_ID (FK)</li></ul></article>
+      <article class="entity"><h3>Evidence</h3><ul><li class="pk">Evidence_ID</li><li>Evidence_Type</li><li>Source</li><li>File_Path</li><li>Date_Collected</li><li>Integrity_Hash</li><li>Notes</li><li>Incident_ID (FK)</li></ul></article>
+      <article class="entity"><h3>Vulnerability</h3><ul><li class="pk">Vulnerability_ID</li><li>Title</li><li>Description</li><li>Severity</li><li>Status</li><li>Detected_Date</li><li>Incident_ID (FK)</li></ul></article>
+      <article class="entity"><h3>Chain_of_Custody</h3><ul><li class="pk">Log_ID</li><li>Handled_By (FK)</li><li>Action</li><li>Action_Time</li><li>Location</li><li>Remarks</li><li>Evidence_ID (FK)</li></ul></article>
+    </div>
+  </section>
+
+  <section style="margin-top:27px" aria-labelledby="relationships-title">
+    <div class="section-head"><h2 id="relationships-title">Relationships</h2><p>Cardinality is shown as the maximum number of related rows.</p></div>
+    <table class="relations">
+      <thead><tr><th>Entity on the one side</th><th>Relationship</th><th>Entity on the many side</th><th>Cardinality</th></tr></thead>
+      <tbody>
+        <tr><td>User</td><td>reports</td><td>Incident</td><td class="cardinality">1 : N</td></tr>
+        <tr><td>Asset</td><td>has incidents</td><td>Incident</td><td class="cardinality">1 : N</td></tr>
+        <tr><td>Incident</td><td>has</td><td>Response_Action</td><td class="cardinality">1 : N</td></tr>
+        <tr><td>Incident</td><td>generates</td><td>Report</td><td class="cardinality">1 : N</td></tr>
+        <tr><td>Incident</td><td>involves</td><td>Investigation</td><td class="cardinality">1 : N</td></tr>
+        <tr><td>Incident</td><td>collects</td><td>Evidence</td><td class="cardinality">1 : N</td></tr>
+        <tr><td>Incident</td><td>has</td><td>Vulnerability</td><td class="cardinality">1 : N</td></tr>
+        <tr><td>Evidence</td><td>is recorded in</td><td>Chain_of_Custody</td><td class="cardinality">1 : N</td></tr>
+      </tbody>
+    </table>
+    <p class="note">Each Incident refers to one Asset and is reported by one User. Every child row stores its parent key as a foreign key.</p>
+  </section>
+  <p class="small">CIRDEMS · Database Systems Project</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,473 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1020 700" width="1020" height="700" style="background:#ffffff; font-family:'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;">
+  <defs>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#0f172a" flood-opacity="0.06"/>
+    </filter>
+  </defs>
+
+  <style>
+    .entity-box { fill: #ccebe8; stroke: #0e7490; stroke-width: 2.2; rx: 4px; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.06)); }
+    .entity-title { font-size: 13.5px; font-weight: 700; fill: #0f172a; text-anchor: middle; dominant-baseline: central; }
+    
+    .rel-diamond { fill: #ffedd5; stroke: #ea580c; stroke-width: 2; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.05)); }
+    .rel-title { font-size: 11px; font-weight: 700; fill: #9a3412; text-anchor: middle; dominant-baseline: central; }
+    
+    .attr-pill { fill: #e0f2fe; stroke: #0284c7; stroke-width: 1.4; rx: 11px; }
+    .attr-text { font-size: 10.5px; font-weight: 500; fill: #075985; text-anchor: middle; dominant-baseline: central; }
+    .pk-attr { text-decoration: underline; font-weight: 700; fill: #0369a1; }
+    
+    .conn-line { stroke: #475569; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .card-label { font-size: 13.5px; font-weight: 800; fill: #0f172a; text-anchor: middle; dominant-baseline: central; }
+    
+    .legend-box { fill: #ffffff; stroke: #94a3b8; stroke-width: 1.5; stroke-dasharray: 5,4; rx: 8px; }
+    .legend-title { font-size: 13px; font-weight: 700; fill: #0f172a; }
+    .legend-text { font-size: 11.5px; font-weight: 600; fill: #334155; dominant-baseline: central; }
+  </style>
+
+  <!-- ==================== CONNECTING LINES & RAILS ==================== -->
+  
+  <!-- Left to Center Horizontal Link: User -(1)- <reports> -(N)- Incident -->
+  <line x1="235" y1="190" x2="285" y2="190" class="conn-line" />
+  <line x1="365" y1="190" x2="435" y2="190" class="conn-line" />
+  
+  <!-- Center to Right Horizontal Link: Incident -(N)- <occurs on> -(1)- Asset -->
+  <line x1="565" y1="190" x2="610" y2="190" class="conn-line" />
+  <line x1="690" y1="190" x2="755" y2="190" class="conn-line" />
+
+  <!-- Attribute connectors: USER (left side) -->
+  <line x1="110" y1="110" x2="140" y2="178" class="conn-line" stroke-width="1.2" />
+  <line x1="110" y1="136" x2="140" y2="183" class="conn-line" stroke-width="1.2" />
+  <line x1="110" y1="162" x2="140" y2="188" class="conn-line" stroke-width="1.2" />
+  <line x1="110" y1="188" x2="140" y2="193" class="conn-line" stroke-width="1.2" />
+  <line x1="110" y1="214" x2="140" y2="198" class="conn-line" stroke-width="1.2" />
+
+  <!-- Attribute connectors: INCIDENT (top side) -->
+  <!-- Left column to Incident -->
+  <line x1="445" y1="39" x2="445" y2="135" class="conn-line" stroke-width="1.2" />
+  <line x1="445" y1="135" x2="480" y2="170" class="conn-line" stroke-width="1.4" />
+  <!-- Right column to Incident -->
+  <line x1="555" y1="39" x2="555" y2="135" class="conn-line" stroke-width="1.2" />
+  <line x1="555" y1="135" x2="520" y2="170" class="conn-line" stroke-width="1.4" />
+
+  <!-- Attribute connectors: ASSET (right side) -->
+  <line x1="850" y1="178" x2="880" y2="110" class="conn-line" stroke-width="1.2" />
+  <line x1="850" y1="183" x2="880" y2="136" class="conn-line" stroke-width="1.2" />
+  <line x1="850" y1="188" x2="880" y2="162" class="conn-line" stroke-width="1.2" />
+  <line x1="850" y1="193" x2="880" y2="188" class="conn-line" stroke-width="1.2" />
+  <line x1="850" y1="198" x2="880" y2="214" class="conn-line" stroke-width="1.2" />
+
+  <!-- Downward distribution from INCIDENT -->
+  <line x1="500" y1="210" x2="500" y2="245" class="conn-line" />
+  <!-- Horizontal rail connecting 4 relationships -->
+  <line x1="140" y1="245" x2="685" y2="245" class="conn-line" />
+
+  <!-- Branch 1: Response_Action -->
+  <line x1="140" y1="245" x2="140" y2="257" class="conn-line" />
+  <line x1="140" y1="293" x2="140" y2="318" class="conn-line" />
+  <!-- Response_Action attributes spine -->
+  <line x1="140" y1="354" x2="140" y2="520" class="conn-line" stroke-width="1.3" />
+
+  <!-- Branch 2: Report -->
+  <line x1="315" y1="245" x2="315" y2="257" class="conn-line" />
+  <line x1="315" y1="293" x2="315" y2="318" class="conn-line" />
+  <!-- Report attributes spine -->
+  <line x1="315" y1="354" x2="315" y2="495" class="conn-line" stroke-width="1.3" />
+
+  <!-- Branch 3: Investigation -->
+  <line x1="500" y1="245" x2="500" y2="256" class="conn-line" />
+  <line x1="500" y1="294" x2="500" y2="318" class="conn-line" />
+  <!-- Investigation attributes spine -->
+  <line x1="500" y1="354" x2="500" y2="545" class="conn-line" stroke-width="1.3" />
+
+  <!-- Branch 4: Evidence & Chain_of_Custody -->
+  <line x1="685" y1="245" x2="685" y2="257" class="conn-line" />
+  <line x1="685" y1="293" x2="685" y2="318" class="conn-line" />
+  <!-- Evidence attributes spine -->
+  <line x1="685" y1="354" x2="685" y2="538" class="conn-line" stroke-width="1.3" />
+
+  <!-- Link: Evidence -> recorded in -> Chain_of_Custody -->
+  <!-- Stepped connector from Evidence bottom area to diamond <recorded in> -->
+  <line x1="635" y1="540" x2="635" y2="551" class="conn-line" />
+  <line x1="635" y1="581" x2="635" y2="605" class="conn-line" />
+  
+  <!-- Chain_of_Custody attributes spine and connectors -->
+  <line x1="710" y1="623" x2="745" y2="623" class="conn-line" stroke-width="1.3" />
+  <line x1="745" y1="530" x2="745" y2="645" class="conn-line" stroke-width="1.3" />
+  <line x1="745" y1="530" x2="760" y2="530" class="conn-line" stroke-width="1.2" />
+  <line x1="745" y1="553" x2="760" y2="553" class="conn-line" stroke-width="1.2" />
+  <line x1="745" y1="576" x2="760" y2="576" class="conn-line" stroke-width="1.2" />
+  <line x1="745" y1="599" x2="760" y2="599" class="conn-line" stroke-width="1.2" />
+  <line x1="745" y1="622" x2="760" y2="622" class="conn-line" stroke-width="1.2" />
+  <line x1="745" y1="645" x2="760" y2="645" class="conn-line" stroke-width="1.2" />
+
+  <!-- Branch 5: Vulnerability (under Asset) -->
+  <line x1="802" y1="208" x2="802" y2="245" class="conn-line" />
+  <line x1="802" y1="245" x2="870" y2="245" class="conn-line" />
+  <line x1="870" y1="245" x2="870" y2="257" class="conn-line" />
+  <line x1="870" y1="293" x2="870" y2="318" class="conn-line" />
+  <!-- Vulnerability attributes spine -->
+  <line x1="870" y1="354" x2="870" y2="520" class="conn-line" stroke-width="1.3" />
+
+
+  <!-- ==================== ENTITY RECTANGLES ==================== -->
+  
+  <!-- 1. USER -->
+  <rect x="140" y="171" width="95" height="38" class="entity-box" />
+  <text x="187.5" y="191" class="entity-title">User</text>
+
+  <!-- 2. INCIDENT -->
+  <rect x="435" y="170" width="130" height="40" class="entity-box" />
+  <text x="500" y="191" class="entity-title" font-size="14.5px">Incident</text>
+
+  <!-- 3. ASSET -->
+  <rect x="755" y="171" width="95" height="38" class="entity-box" />
+  <text x="802.5" y="191" class="entity-title">Asset</text>
+
+  <!-- 4. RESPONSE_ACTION -->
+  <rect x="75" y="318" width="130" height="36" class="entity-box" />
+  <text x="140" y="337" class="entity-title" font-size="12.5px">Response_Action</text>
+
+  <!-- 5. REPORT -->
+  <rect x="265" y="318" width="100" height="36" class="entity-box" />
+  <text x="315" y="337" class="entity-title" font-size="13px">Report</text>
+
+  <!-- 6. INVESTIGATION -->
+  <rect x="430" y="318" width="140" height="36" class="entity-box" />
+  <text x="500" y="337" class="entity-title" font-size="13px">Investigation</text>
+
+  <!-- 7. EVIDENCE -->
+  <rect x="630" y="318" width="110" height="36" class="entity-box" />
+  <text x="685" y="337" class="entity-title" font-size="13px">Evidence</text>
+
+  <!-- 8. CHAIN_OF_CUSTODY -->
+  <rect x="560" y="605" width="150" height="36" class="entity-box" />
+  <text x="635" y="624" class="entity-title" font-size="12.5px">Chain_of_Custody</text>
+
+  <!-- 9. VULNERABILITY -->
+  <rect x="805" y="318" width="130" height="36" class="entity-box" />
+  <text x="870" y="337" class="entity-title" font-size="12.5px">Vulnerability</text>
+
+
+  <!-- ==================== RELATIONSHIP DIAMONDS ==================== -->
+
+  <!-- reports (between User and Incident) -->
+  <polygon points="285,190 325,172 365,190 325,208" class="rel-diamond" />
+  <text x="325" y="191" class="rel-title">reports</text>
+  <text x="260" y="180" class="card-label">1</text>
+  <text x="400" y="180" class="card-label">N</text>
+
+  <!-- occurs on (between Incident and Asset) -->
+  <polygon points="610,190 650,172 690,190 650,208" class="rel-diamond" />
+  <text x="650" y="191" class="rel-title">occurs on</text>
+  <text x="585" y="180" class="card-label">N</text>
+  <text x="725" y="180" class="card-label">1</text>
+
+  <!-- has (Incident -> Response_Action) -->
+  <polygon points="105,275 140,257 175,275 140,293" class="rel-diamond" />
+  <text x="140" y="276" class="rel-title">has</text>
+  <text x="156" y="254" class="card-label" font-size="12px">1</text>
+  <text x="156" y="306" class="card-label" font-size="12px">N</text>
+
+  <!-- generates (Incident -> Report) -->
+  <polygon points="275,275 315,257 355,275 315,293" class="rel-diamond" />
+  <text x="315" y="276" class="rel-title">generates</text>
+  <text x="331" y="254" class="card-label" font-size="12px">1</text>
+  <text x="331" y="306" class="card-label" font-size="12px">N</text>
+
+  <!-- is investigated in (Incident -> Investigation) -->
+  <polygon points="448,275 500,256 552,275 500,294" class="rel-diamond" />
+  <text x="500" y="276" class="rel-title" font-size="9.5px">is investigated in</text>
+  <text x="516" y="254" class="card-label" font-size="12px">1</text>
+  <text x="516" y="306" class="card-label" font-size="12px">1</text>
+
+  <!-- collects (Investigation -> Evidence) -->
+  <polygon points="648,275 685,257 722,275 685,293" class="rel-diamond" />
+  <text x="685" y="276" class="rel-title">collects</text>
+  <text x="701" y="254" class="card-label" font-size="12px">1</text>
+  <text x="701" y="306" class="card-label" font-size="12px">N</text>
+
+  <!-- recorded in (Evidence -> Chain_of_Custody) -->
+  <polygon points="593,566 635,551 677,566 635,581" class="rel-diamond" />
+  <text x="635" y="567" class="rel-title" font-size="9.5px">recorded in</text>
+  <text x="650" y="550" class="card-label" font-size="11.5px">1</text>
+  <text x="650" y="595" class="card-label" font-size="11.5px">N</text>
+
+  <!-- has (Asset -> Vulnerability) -->
+  <polygon points="835,275 870,257 905,275 870,293" class="rel-diamond" />
+  <text x="870" y="276" class="rel-title">has</text>
+  <text x="886" y="254" class="card-label" font-size="12px">1</text>
+  <text x="886" y="306" class="card-label" font-size="12px">N</text>
+
+
+  <!-- ==================== ATTRIBUTE OVALS / PILLS ==================== -->
+
+  <!-- User Attributes (Left) -->
+  <g transform="translate(20, 99)">
+    <rect x="0" y="0" width="90" height="22" class="attr-pill" />
+    <text x="45" y="12" class="attr-text pk-attr">User_ID</text>
+  </g>
+  <g transform="translate(20, 125)">
+    <rect x="0" y="0" width="90" height="22" class="attr-pill" />
+    <text x="45" y="12" class="attr-text">Username</text>
+  </g>
+  <g transform="translate(20, 151)">
+    <rect x="0" y="0" width="90" height="22" class="attr-pill" />
+    <text x="45" y="12" class="attr-text">Email</text>
+  </g>
+  <g transform="translate(20, 177)">
+    <rect x="0" y="0" width="90" height="22" class="attr-pill" />
+    <text x="45" y="12" class="attr-text">Role</text>
+  </g>
+  <g transform="translate(20, 203)">
+    <rect x="0" y="0" width="90" height="22" class="attr-pill" />
+    <text x="45" y="12" class="attr-text">Status</text>
+  </g>
+
+  <!-- Incident Attributes (Top: Left Column) -->
+  <g transform="translate(398, 17)">
+    <rect x="0" y="0" width="94" height="21" class="attr-pill" />
+    <text x="47" y="11.5" class="attr-text pk-attr">Incident_ID</text>
+  </g>
+  <g transform="translate(398, 43)">
+    <rect x="0" y="0" width="94" height="21" class="attr-pill" />
+    <text x="47" y="11.5" class="attr-text">Title</text>
+  </g>
+  <g transform="translate(398, 69)">
+    <rect x="0" y="0" width="94" height="21" class="attr-pill" />
+    <text x="47" y="11.5" class="attr-text">Description</text>
+  </g>
+  <g transform="translate(398, 95)">
+    <rect x="0" y="0" width="94" height="21" class="attr-pill" />
+    <text x="47" y="11.5" class="attr-text">Date_Reported</text>
+  </g>
+
+  <!-- Incident Attributes (Top: Right Column) -->
+  <g transform="translate(508, 17)">
+    <rect x="0" y="0" width="94" height="21" class="attr-pill" />
+    <text x="47" y="11.5" class="attr-text">Severity</text>
+  </g>
+  <g transform="translate(508, 43)">
+    <rect x="0" y="0" width="94" height="21" class="attr-pill" />
+    <text x="47" y="11.5" class="attr-text">Status</text>
+  </g>
+  <g transform="translate(508, 69)">
+    <rect x="0" y="0" width="94" height="21" class="attr-pill" />
+    <text x="47" y="11.5" class="attr-text">Asset_ID</text>
+  </g>
+  <g transform="translate(508, 95)">
+    <rect x="0" y="0" width="94" height="21" class="attr-pill" />
+    <text x="47" y="11.5" class="attr-text">Reported_By</text>
+  </g>
+
+  <!-- Asset Attributes (Right) -->
+  <g transform="translate(880, 99)">
+    <rect x="0" y="0" width="92" height="22" class="attr-pill" />
+    <text x="46" y="12" class="attr-text pk-attr">Asset_ID</text>
+  </g>
+  <g transform="translate(880, 125)">
+    <rect x="0" y="0" width="92" height="22" class="attr-pill" />
+    <text x="46" y="12" class="attr-text">Asset_Name</text>
+  </g>
+  <g transform="translate(880, 151)">
+    <rect x="0" y="0" width="92" height="22" class="attr-pill" />
+    <text x="46" y="12" class="attr-text">Asset_Type</text>
+  </g>
+  <g transform="translate(880, 177)">
+    <rect x="0" y="0" width="92" height="22" class="attr-pill" />
+    <text x="46" y="12" class="attr-text">Location</text>
+  </g>
+  <g transform="translate(880, 203)">
+    <rect x="0" y="0" width="92" height="22" class="attr-pill" />
+    <text x="46" y="12" class="attr-text">Status</text>
+  </g>
+
+  <!-- Response_Action Attributes (Column 1) -->
+  <g transform="translate(85, 364)">
+    <rect x="0" y="0" width="110" height="21" class="attr-pill" />
+    <text x="55" y="11.5" class="attr-text pk-attr">Action_ID</text>
+  </g>
+  <g transform="translate(85, 389)">
+    <rect x="0" y="0" width="110" height="21" class="attr-pill" />
+    <text x="55" y="11.5" class="attr-text">Action_Type</text>
+  </g>
+  <g transform="translate(85, 414)">
+    <rect x="0" y="0" width="110" height="21" class="attr-pill" />
+    <text x="55" y="11.5" class="attr-text">Description</text>
+  </g>
+  <g transform="translate(85, 439)">
+    <rect x="0" y="0" width="110" height="21" class="attr-pill" />
+    <text x="55" y="11.5" class="attr-text">Assigned_To</text>
+  </g>
+  <g transform="translate(85, 464)">
+    <rect x="0" y="0" width="110" height="21" class="attr-pill" />
+    <text x="55" y="11.5" class="attr-text">Action_Date</text>
+  </g>
+  <g transform="translate(85, 489)">
+    <rect x="0" y="0" width="110" height="21" class="attr-pill" />
+    <text x="55" y="11.5" class="attr-text">Status</text>
+  </g>
+
+  <!-- Report Attributes (Column 2) -->
+  <g transform="translate(262, 364)">
+    <rect x="0" y="0" width="106" height="21" class="attr-pill" />
+    <text x="53" y="11.5" class="attr-text pk-attr">Report_ID</text>
+  </g>
+  <g transform="translate(262, 389)">
+    <rect x="0" y="0" width="106" height="21" class="attr-pill" />
+    <text x="53" y="11.5" class="attr-text">Report_Type</text>
+  </g>
+  <g transform="translate(262, 414)">
+    <rect x="0" y="0" width="106" height="21" class="attr-pill" />
+    <text x="53" y="11.5" class="attr-text">Date_Generated</text>
+  </g>
+  <g transform="translate(262, 439)">
+    <rect x="0" y="0" width="106" height="21" class="attr-pill" />
+    <text x="53" y="11.5" class="attr-text">Summary</text>
+  </g>
+  <g transform="translate(262, 464)">
+    <rect x="0" y="0" width="106" height="21" class="attr-pill" />
+    <text x="53" y="11.5" class="attr-text">Generated_By</text>
+  </g>
+
+  <!-- Investigation Attributes (Column 3) -->
+  <g transform="translate(443, 364)">
+    <rect x="0" y="0" width="114" height="21" class="attr-pill" />
+    <text x="57" y="11.5" class="attr-text pk-attr">Investigation_ID</text>
+  </g>
+  <g transform="translate(443, 389)">
+    <rect x="0" y="0" width="114" height="21" class="attr-pill" />
+    <text x="57" y="11.5" class="attr-text">Start_Date</text>
+  </g>
+  <g transform="translate(443, 414)">
+    <rect x="0" y="0" width="114" height="21" class="attr-pill" />
+    <text x="57" y="11.5" class="attr-text">End_Date</text>
+  </g>
+  <g transform="translate(443, 439)">
+    <rect x="0" y="0" width="114" height="21" class="attr-pill" />
+    <text x="57" y="11.5" class="attr-text">Status</text>
+  </g>
+  <g transform="translate(443, 464)">
+    <rect x="0" y="0" width="114" height="21" class="attr-pill" />
+    <text x="57" y="11.5" class="attr-text">Findings</text>
+  </g>
+  <g transform="translate(443, 489)">
+    <rect x="0" y="0" width="114" height="21" class="attr-pill" />
+    <text x="57" y="11.5" class="attr-text">Conclusion</text>
+  </g>
+  <g transform="translate(443, 514)">
+    <rect x="0" y="0" width="114" height="21" class="attr-pill" />
+    <text x="57" y="11.5" class="attr-text">Investigator_ID</text>
+  </g>
+
+  <!-- Evidence Attributes (Column 4) -->
+  <g transform="translate(629, 364)">
+    <rect x="0" y="0" width="112" height="21" class="attr-pill" />
+    <text x="56" y="11.5" class="attr-text pk-attr">Evidence_ID</text>
+  </g>
+  <g transform="translate(629, 389)">
+    <rect x="0" y="0" width="112" height="21" class="attr-pill" />
+    <text x="56" y="11.5" class="attr-text">Evidence_Type</text>
+  </g>
+  <g transform="translate(629, 414)">
+    <rect x="0" y="0" width="112" height="21" class="attr-pill" />
+    <text x="56" y="11.5" class="attr-text">Source</text>
+  </g>
+  <g transform="translate(629, 439)">
+    <rect x="0" y="0" width="112" height="21" class="attr-pill" />
+    <text x="56" y="11.5" class="attr-text">File_Path</text>
+  </g>
+  <g transform="translate(629, 464)">
+    <rect x="0" y="0" width="112" height="21" class="attr-pill" />
+    <text x="56" y="11.5" class="attr-text">Date_Collected</text>
+  </g>
+  <g transform="translate(629, 489)">
+    <rect x="0" y="0" width="112" height="21" class="attr-pill" />
+    <text x="56" y="11.5" class="attr-text">Integrity_Hash</text>
+  </g>
+  <g transform="translate(629, 514)">
+    <rect x="0" y="0" width="112" height="21" class="attr-pill" />
+    <text x="56" y="11.5" class="attr-text">Notes</text>
+  </g>
+
+  <!-- Chain_of_Custody Attributes (Column 4 Lower Right) -->
+  <g transform="translate(760, 520)">
+    <rect x="0" y="0" width="114" height="20" class="attr-pill" />
+    <text x="57" y="11" class="attr-text pk-attr">Log_ID</text>
+  </g>
+  <g transform="translate(760, 543)">
+    <rect x="0" y="0" width="114" height="20" class="attr-pill" />
+    <text x="57" y="11" class="attr-text">Handled_By</text>
+  </g>
+  <g transform="translate(760, 566)">
+    <rect x="0" y="0" width="114" height="20" class="attr-pill" />
+    <text x="57" y="11" class="attr-text">Action</text>
+  </g>
+  <g transform="translate(760, 589)">
+    <rect x="0" y="0" width="114" height="20" class="attr-pill" />
+    <text x="57" y="11" class="attr-text">Action_Date</text>
+  </g>
+  <g transform="translate(760, 612)">
+    <rect x="0" y="0" width="114" height="20" class="attr-pill" />
+    <text x="57" y="11" class="attr-text">Location</text>
+  </g>
+  <g transform="translate(760, 635)">
+    <rect x="0" y="0" width="114" height="20" class="attr-pill" />
+    <text x="57" y="11" class="attr-text">Remarks</text>
+  </g>
+
+  <!-- Vulnerability Attributes (Column 5) -->
+  <g transform="translate(814, 364)">
+    <rect x="0" y="0" width="112" height="21" class="attr-pill" />
+    <text x="56" y="11.5" class="attr-text pk-attr">Vulnerability_ID</text>
+  </g>
+  <g transform="translate(814, 389)">
+    <rect x="0" y="0" width="112" height="21" class="attr-pill" />
+    <text x="56" y="11.5" class="attr-text">Title</text>
+  </g>
+  <g transform="translate(814, 414)">
+    <rect x="0" y="0" width="112" height="21" class="attr-pill" />
+    <text x="56" y="11.5" class="attr-text">Description</text>
+  </g>
+  <g transform="translate(814, 439)">
+    <rect x="0" y="0" width="112" height="21" class="attr-pill" />
+    <text x="56" y="11.5" class="attr-text">Severity</text>
+  </g>
+  <g transform="translate(814, 464)">
+    <rect x="0" y="0" width="112" height="21" class="attr-pill" />
+    <text x="56" y="11.5" class="attr-text">Status</text>
+  </g>
+  <g transform="translate(814, 489)">
+    <rect x="0" y="0" width="112" height="21" class="attr-pill" />
+    <text x="56" y="11.5" class="attr-text">Detected_Date</text>
+  </g>
+
+
+  <!-- ==================== LEGEND BOX ==================== -->
+  <g transform="translate(18, 545)">
+    <rect x="0" y="0" width="345" height="115" class="legend-box" />
+    <text x="14" y="24" class="legend-title">Legend</text>
+    
+    <!-- Item 1: Entity -->
+    <rect x="14" y="38" width="46" height="22" class="entity-box" />
+    <text x="68" y="50" class="legend-text">Entity</text>
+    
+    <!-- Item 2: Relationship -->
+    <polygon points="125,50 148,39 171,50 148,61" class="rel-diamond" />
+    <text x="180" y="50" class="legend-text">Relationship</text>
+    
+    <!-- Item 3: Attribute -->
+    <rect x="256" y="38" width="48" height="22" class="attr-pill" />
+    <text x="312" y="50" class="legend-text">Attribute</text>
+    
+    <!-- Item 4: Cardinality Notation -->
+    <text x="24" y="88" class="card-label" font-size="14px">1</text>
+    <text x="44" y="88" class="legend-text">— One</text>
+    
+    <text x="110" y="88" class="card-label" font-size="14px">N</text>
+    <text x="130" y="88" class="legend-text">— Many</text>
+    
+    <text x="195" y="88" class="card-label pk-attr" font-size="12px">PK</text>
+    <text x="222" y="88" class="legend-text">— Primary Key (underlined)</text>
+  </g>
+
+</svg>

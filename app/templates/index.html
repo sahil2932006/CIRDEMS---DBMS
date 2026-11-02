@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CIRDEMS | Incident and Evidence Management</title>
+    <style>
+        :root {
+            --bg-base: #06090e;
+            --bg-surface: #0e1420;
+            --bg-card: #151d2d;
+            --border-dim: #1e293b;
+            --border-glow: #0284c7;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --cyan-glow: #06b6d4;
+            --blue-glow: #38bdf8;
+            --green-glow: #10b981;
+            --amber-glow: #f59e0b;
+            --red-glow: #ef4444;
+            --purple-glow: #a855f7;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: radial-gradient(rgba(14, 165, 233, 0.08) 1px, transparent 1px);
+            background-size: 32px 32px;
+        }
+
+        header {
+            background: rgba(14, 20, 32, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-dim);
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .shield-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #0284c7, #06b6d4);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            box-shadow: 0 0 16px rgba(6, 182, 212, 0.4);
+        }
+
+        .brand-title {
+            font-weight: 700;
+            font-size: 1.25rem;
+            letter-spacing: 0.5px;
+            background: linear-gradient(to right, #ffffff, #38bdf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand-sub {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            font-size: 0.8rem;
+            font-family: 'JetBrains Mono', monospace;
+            color: #34d399;
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            box-shadow: 0 0 8px #10b981;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.85); }
+        }
+
+        main {
+            flex: 1;
+            padding: 24px 32px;
+            max-width: 1600px;
+            margin: 0 auto;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .flow-banner {
+            background: linear-gradient(90deg, rgba(2, 132, 199, 0.15), rgba(168, 85, 247, 0.15));
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 12px;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .flow-steps {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .flow-step {
+            background: var(--bg-card);
+            border: 1px solid var(--border-dim);
+            padding: 6px 12px;
+            border-radius: 6px;
+            color: #38bdf8;
+            font-weight: 600;
+        }
+
+        .flow-arrow {
+            color: var(--text-secondary);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        @media (max-width: 1024px) {
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-dim);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            transition: border-color 0.2s;
+        }
+
+        .card:hover {
+            border-color: rgba(56, 189, 248, 0.4);
+        }
+
+        .card-header {
+            background: rgba(14, 20, 32, 0.6);
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border-dim);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-primary);
+        }
+
+        .card-body {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .input-group label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        input, select, textarea {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-dim);
+            color: var(--text-primary);
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.875rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--cyan-glow);
+            box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.2);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #0284c7, #2563eb);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, #0369a1, #1d4ed8);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #b91c1c, #991b1b);
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-dim);
+            color: var(--text-secondary);
+        }
+
+        .btn-outline:hover {
+            background: var(--bg-surface);
+            color: var(--text-primary);
+            border-color: var(--text-secondary);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            text-align: left;
+        }
+
+        th {
+            background: rgba(14, 20, 32, 0.8);
+            padding: 10px 14px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-dim);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+        }
+
+        td {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--border-dim);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .tag {
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .tag-critical { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
+        .tag-high { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+        .tag-medium { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); }
+        .tag-active { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+        .tag-investigating { background: rgba(168, 85, 247, 0.2); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.4); }
+        .tag-compromised { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
+
+        .terminal-box {
+            background: #090d14;
+            border: 1px solid #1e293b;
+            border-radius: 8px;
+            padding: 14px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: #38bdf8;
+            max-height: 220px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            line-height: 1.5;
+        }
+
+        .tab-bar {
+            display: flex;
+            gap: 12px;
+            border-bottom: 1px solid var(--border-dim);
+            padding-bottom: 8px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 6px 12px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background: rgba(56, 189, 248, 0.15);
+            color: #38bdf8;
+        }
+
+        footer {
+            text-align: center;
+            padding: 18px;
+            border-top: 1px solid var(--border-dim);
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
+        /* A quieter, conventional dashboard style for a student database project. */
+        :root {
+            --bg-base: #f3f5f7;
+            --bg-surface: #f8fafb;
+            --bg-card: #ffffff;
+            --border-dim: #d9e0e7;
+            --border-glow: #7da0c4;
+            --text-primary: #1f2937;
+            --text-secondary: #596779;
+            --cyan-glow: #315f8c;
+            --blue-glow: #315f8c;
+            --green-glow: #347653;
+            --amber-glow: #93651d;
+            --red-glow: #a24141;
+            --purple-glow: #596b80;
+        }
+        body { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; background-image: none; }
+        header { background: #fff; backdrop-filter: none; box-shadow: 0 1px 3px #172b3d0d; padding: 13px 28px; }
+        .shield-icon { background: #e8eef4; box-shadow: none; color: #315f8c; border: 1px solid #d5e0ea; }
+        .brand-title { background: none; color: #20364d; -webkit-text-fill-color: currentColor; letter-spacing: 0; }
+        .brand-sub { font-family: inherit; font-size: .8rem; }
+        .status-badge { border-radius: 5px; background: #edf6ef; border: 1px solid #cfdfd1; color: #326341; font-family: inherit; }
+        .pulse-dot { animation: none; box-shadow: none; }
+        main { max-width: 1320px; gap: 18px; padding-top: 22px; }
+        .flow-banner { background: #fff; border: 1px solid var(--border-dim); border-radius: 8px; padding: 18px 20px; }
+        .flow-banner strong { color: #20364d !important; }
+        .flow-steps { display: none; }
+        .card { border-radius: 8px; box-shadow: 0 1px 3px #172b3d0b; transition: none; }
+        .card:hover { border-color: var(--border-dim); }
+        .card-header { background: #f8fafb; padding: 13px 17px; }
+        .card-title { font-size: .96rem; }
+        .btn { background: #315f8c; border-radius: 5px; box-shadow: none; transition: background-color .15s ease; }
+        .btn:hover { background: #254b70; transform: none; box-shadow: none; }
+        .btn-danger, .btn-danger:hover { background: #a24141; }
+        .btn-outline { color: #315f8c; border-color: #c9d5e0; }
+        .btn-outline:hover { background: #edf2f6; color: #20364d; border-color: #b6c5d3; }
+        .tag { border-radius: 4px; }
+        th { background: #f3f6f8; font-family: inherit; letter-spacing: .02em; }
+        td { font-family: inherit; }
+        .terminal-box { background: #f6f8fa; border-color: #d9e0e7; color: #43576b; font-family: ui-monospace, Consolas, monospace; }
+        footer { color: #657486; }
+        .section-note { color: var(--text-secondary); font-size: .88rem; margin: -10px 0 0; }
+        @media (max-width: 700px) { header { align-items: flex-start; flex-direction: column; padding: 14px 18px; } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand">
+            <div class="shield-icon">C</div>
+            <div>
+                <div class="brand-title">CIRDEMS</div>
+                <div class="brand-sub">Incident and digital evidence management</div>
+            </div>
+        </div>
+        <div style="display: flex; gap: 14px; align-items: center;">
+            <a href="/diagram" class="btn btn-outline" style="text-decoration: none;">ER diagram</a>
+            <a href="/er-data" class="btn" style="text-decoration: none;">Add records</a>
+            <div class="status-badge" id="dbStatus">
+                <span class="pulse-dot"></span>
+                <span>Connecting to Oracle...</span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="flow-banner">
+            <div>
+                <strong>Project dashboard</strong>
+                <span style="color: var(--text-secondary); font-size: 0.9rem; margin-left: 10px;">Review current records or add data using the ER forms.</span>
+            </div>
+        </div>
+
+        <h2 style="font-size:1.1rem;color:#20364d;">Database demonstrations</h2>
+        <p class="section-note">These controls demonstrate PL/SQL behavior. For normal data entry, use <strong>Add records</strong> above.</p>
+        <div class="grid-3">
+            <!-- Action 1: Stored Procedure Runner -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Create an incident (procedure demo)</div>
+                    <span class="tag tag-medium">WRITES TO DATABASE</span>
+                </div>
+                <div class="card-body">
+                    <p style="font-size: 0.8rem; color: var(--text-secondary);">
+                        Runs <code>SP_LOG_INCIDENT_WITH_INVESTIGATION</code>. This permanently creates an incident and its initial investigation. Use the ER form to enter a complete incident record.
+                    </p>
+                    <div class="input-group">
+                        <label>Target Asset</label>
+                        <select id="spAssetSelect">
+                            <option value="4">WEB-PORTAL-PROD (10.0.2.15)</option>
+                            <option value="5">FS-FINANCE-01 (10.0.3.50)</option>
+                            <option value="1">DC-CORP-01 (10.0.1.5)</option>
+                            <option value="2">DB-ORACLE-PROD (10.0.1.10)</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Severity Level</label>
+                        <select id="spSeverity">
+                            <option value="CRITICAL">CRITICAL (Fires status trigger)</option>
+                            <option value="HIGH">HIGH</option>
+                            <option value="MEDIUM">MEDIUM</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Incident title</label>
+                        <input type="text" id="spTitle" placeholder="Enter a short incident title" required />
+                    </div>
+                    <button class="btn" onclick="executeLogIncident()">
+                        Create sample incident
+                    </button>
+                </div>
+            </div>
+
+            <!-- Action 2: Dynamic Function Assessment -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Calculate asset risk (read-only)</div>
+                    <span class="tag tag-investigating">FUNCTION DEMO</span>
+                </div>
+                <div class="card-body">
+                    <p style="font-size: 0.8rem; color: var(--text-secondary);">
+                        Runs <code>FN_GET_ASSET_RISK_SCORE(asset_id)</code> using asset criticality, open vulnerabilities, and alerts. This calculation does not change database records.
+                    </p>
+                    <div class="input-group">
+                        <label>Asset</label>
+                        <select id="fnAssetSelect">
+                            <option value="5">FS-FINANCE-01 (Criticality: HIGH)</option>
+                            <option value="4">WEB-PORTAL-PROD (Criticality: HIGH)</option>
+                            <option value="1">DC-CORP-01 (Criticality: CRITICAL)</option>
+                            <option value="3">FW-PERIMETER-01 (Criticality: CRITICAL)</option>
+                        </select>
+                    </div>
+                    <button class="btn" onclick="executeCalcRisk()">
+                        Calculate risk score
+                    </button>
+                    <div style="background: var(--bg-surface); border: 1px solid var(--border-dim); border-radius: 8px; padding: 14px; text-align: center;">
+                        <div style="font-size: 0.75rem; color: var(--text-secondary);">RISK SCORE</div>
+                        <div id="riskScoreVal" style="font-size: 2rem; font-weight: 700; color: #38bdf8; margin: 4px 0;">-- / 100</div>
+                        <div id="riskFormula" style="font-size: 0.7rem; color: var(--text-secondary); font-family: 'JetBrains Mono', monospace;">Click calculate to invoke function</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action 3: Trigger Integrity Test -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Check evidence protection</div>
+                    <span class="tag tag-critical">TRIGGER DEMO</span>
+                </div>
+                <div class="card-body">
+                    <p style="font-size: 0.8rem; color: var(--text-secondary);">
+                        Attempts to delete a verified evidence row so <code>TRG_PREVENT_EVIDENCE_TAMPERING</code> can reject it. The delete is rolled back; the evidence should remain unchanged.
+                    </p>
+                    <div style="background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 8px; padding: 12px; font-size: 0.8rem;">
+                        <strong>Test record:</strong> Evidence #1<br>
+                        <strong>Expected result:</strong> blocked by the trigger
+                    </div>
+                    <button class="btn btn-danger" onclick="executeTestTrigger()">
+                        Run protection check
+                    </button>
+                    <div id="triggerResultBox" class="terminal-box" style="display: none; max-height: 100px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Real-Time Database Output Console -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Demo activity log</div>
+                <button class="btn btn-outline" style="padding: 4px 10px; font-size: 0.75rem;" onclick="clearConsole()">Clear</button>
+            </div>
+            <div class="card-body" style="padding: 12px;">
+                <div class="terminal-box" id="auditConsole">
+This log shows messages from the demonstration controls on this page. It is not an Oracle audit table.
+                </div>
+            </div>
+        </div>
+
+        <!-- Tables Display Section -->
+        <div class="grid-2">
+            <!-- Active Incidents Table -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Incidents</div>
+                                <button class="btn btn-outline" style="padding: 4px 10px; font-size: 0.75rem;" onclick="loadIncidents()">Refresh</button>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>INCIDENT ID</th>
+                                <th>TARGET ASSET</th>
+                                <th>INCIDENT TITLE</th>
+                                <th>SEVERITY</th>
+                                <th>STATUS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="incidentsTableBody">
+                            <tr><td colspan="5" style="text-align: center;">Loading incident records...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Monitored Assets Table -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Assets</div>
+                    <button class="btn btn-outline" style="padding: 4px 10px; font-size: 0.75rem;" onclick="loadAssets()">Refresh</button>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>HOSTNAME</th>
+                                <th>IP ADDRESS</th>
+                                <th>CRITICALITY</th>
+                                <th>STATUS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="assetsTableBody">
+                            <tr><td colspan="5" style="text-align: center;">Loading assets...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        CIRDEMS · Database Systems Project
+    </footer>
+
+    <script>
+        function logToConsole(text) {
+            const consoleBox = document.getElementById('auditConsole');
+            const timestamp = new Date().toLocaleTimeString();
+            consoleBox.textContent += `\n[${timestamp}] ${text}`;
+            consoleBox.scrollTop = consoleBox.scrollHeight;
+        }
+
+        function clearConsole() {
+            document.getElementById('auditConsole').textContent = '[*] Console cleared.';
+        }
+
+        async function checkStatus() {
+            try {
+                const res = await fetch('/api/status');
+                const data = await res.json();
+                const badge = document.getElementById('dbStatus');
+                badge.innerHTML = `<span class="pulse-dot"></span><span>${data.message}</span>`;
+                logToConsole(`System Status: ${data.message}`);
+            } catch (e) {
+                logToConsole(`Connection Check Failed: ${e.message}`);
+            }
+        }
+
+        async function loadAssets() {
+            try {
+                const res = await fetch('/api/assets');
+                const assets = await res.json();
+                const tbody = document.getElementById('assetsTableBody');
+                tbody.innerHTML = assets.map(a => `
+                    <tr>
+                        <td>#${a.asset_id}</td>
+                        <td><strong>${a.asset_name}</strong></td>
+                        <td>${a.ip_address}</td>
+                        <td><span class="tag tag-${a.criticality.toLowerCase()}">${a.criticality}</span></td>
+                        <td><span class="tag tag-${a.asset_status.toLowerCase()}">${a.asset_status}</span></td>
+                    </tr>
+                `).join('');
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        async function loadDemoAssetOptions() {
+            const res = await fetch('/api/assets');
+            const assets = await res.json();
+            for (const selectId of ['spAssetSelect', 'fnAssetSelect']) {
+                const select = document.getElementById(selectId);
+                const oldValue = select.value;
+                select.innerHTML = assets.map(a => `<option value="${a.asset_id}">${a.asset_name} (${a.ip_address})</option>`).join('');
+                if (assets.some(a => String(a.asset_id) === oldValue)) select.value = oldValue;
+            }
+        }
+
+        async function loadIncidents() {
+            try {
+                const res = await fetch('/api/incidents');
+                const incidents = await res.json();
+                const tbody = document.getElementById('incidentsTableBody');
+                tbody.innerHTML = incidents.map(i => `
+                    <tr>
+                        <td>#${i.incident_id}</td>
+                        <td>${i.asset_name}</td>
+                        <td>${i.incident_title}</td>
+                        <td><span class="tag tag-${i.severity.toLowerCase()}">${i.severity}</span></td>
+                        <td><span class="tag tag-${i.status.toLowerCase()}">${i.status}</span></td>
+                    </tr>
+                `).join('');
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        async function executeLogIncident() {
+            const asset_id = document.getElementById('spAssetSelect').value;
+            const severity = document.getElementById('spSeverity').value;
+            const title = document.getElementById('spTitle').value;
+
+            if (!title.trim()) {
+                document.getElementById('spTitle').focus();
+                return;
+            }
+
+            logToConsole(`>>> USER OPERATION INITIATED: Calling SP_LOG_INCIDENT_WITH_INVESTIGATION(Asset #${asset_id}, Severity: ${severity})`);
+            
+            try {
+                const res = await fetch('/api/action/log_incident', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({asset_id, severity, title})
+                });
+                const data = await res.json();
+                if (!res.ok || !data.success) throw new Error(data.error || data.message || 'Incident could not be created');
+                logToConsole(`>>> TRANSACTION PIPELINE: ${data.flow}`);
+                logToConsole(`>>> RESULT: ${data.message}`);
+                loadIncidents();
+                loadAssets();
+            } catch (e) {
+                logToConsole(`>>> ERROR: ${e.message}`);
+            }
+        }
+
+        async function executeCalcRisk() {
+            const asset_id = document.getElementById('fnAssetSelect').value;
+            logToConsole(`>>> USER OPERATION: Invoking Function FN_GET_ASSET_RISK_SCORE(Asset #${asset_id})`);
+            
+            try {
+                const res = await fetch(`/api/action/calc_risk?asset_id=${asset_id}`);
+                const data = await res.json();
+                document.getElementById('riskScoreVal').textContent = `${data.risk_score} / 100`;
+                if (data.formula) {
+                    document.getElementById('riskFormula').textContent = data.formula;
+                }
+                logToConsole(`>>> FUNCTION RESULT: Evaluated Risk Rating = ${data.risk_score}/100`);
+            } catch (e) {
+                logToConsole(`>>> ERROR: ${e.message}`);
+            }
+        }
+
+        async function executeTestTrigger() {
+            logToConsole(`Trying to delete Evidence #1 to check the integrity trigger. The request is always rolled back.`);
+            
+            try {
+                const res = await fetch('/api/action/test_tamper_trigger', {method: 'POST'});
+                const data = await res.json();
+                
+                const box = document.getElementById('triggerResultBox');
+                box.style.display = 'block';
+                box.style.color = data.trigger_fired ? '#326341' : '#a24141';
+                box.textContent = data.trigger_fired
+                    ? `Passed: ${data.trigger_name} rejected the delete. Evidence remains unchanged.`
+                    : `Check failed: ${data.message || data.error || 'The trigger did not reject the operation.'}`;
+                logToConsole(box.textContent);
+            } catch (e) {
+                logToConsole(`>>> ERROR: ${e.message}`);
+            }
+        }
+
+        // Initialize on load
+        window.onload = () => {
+            checkStatus();
+            loadAssets();
+            loadDemoAssetOptions();
+            loadIncidents();
+        };
+    </script>
+</body>
+</html>
